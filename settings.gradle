@@ -1,0 +1,6 @@
+rootProject.name = 'hexapass'
+
+// 향후 멀티모듈 구조를 위한 설정 (현재는 단일 모듈)
+// include 'domain'
+// include 'app-cli'
+// include 'app-spring'
