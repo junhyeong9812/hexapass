@@ -123,6 +123,15 @@
 | **Reservation** | reservationId | memberId, resourceId, timeSlot, status | 예약~완료/취소 |
 | **Payment** | paymentId | amount, method, status, timestamp | 시도~완료/실패 |
 
+| 엔티티 | 영문명 | 의미 | 식별자 | 주요 속성 | 생명주기 |
+|--------|--------|------|--------|-----------|----------|
+| **회원** | **Member** | 서비스를 이용하는 고객/사용자 | memberId | name, email, phone, membershipPlan | 가입~탈퇴 |
+| **멤버십 플랜** | **MembershipPlan** | 회원이 선택할 수 있는 구독 상품 | planId | name, price, duration, privileges | 생성~종료 |
+| **리소스** | **Resource** | 예약 가능한 시설이나 서비스 | resourceId | name, type, capacity, location | 등록~삭제 |
+| **예약** | **Reservation** | 특정 시간대에 리소스를 이용하기 위한 예약 | reservationId | memberId, resourceId, timeSlot, status | 예약~완료/취소 |
+| **결제** | **Payment** | 서비스 이용료나 멤버십 비용 결제 내역 | paymentId | amount, method, status, timestamp | 시도~완료/실패 |
+
+
 ### 값 객체 (Value Object) - 식별자 없이 값 자체가 의미
 
 | 값 객체 | 구성 요소 | 불변 규칙 | 활용 목적 |
@@ -133,6 +142,15 @@
 | **Capacity** | current, maximum | 0 ≤ current ≤ max | 정원 관리 |
 | **ContactInfo** | email, phone | 유효한 형식 | 연락처 정보 |
 | **Address** | street, city, zipCode | 빈 값 불허 | 위치 정보 |
+
+| 값 객체 | 영문명 | 의미 | 구성 요소 | 불변 규칙 | 활용 목적 |
+|---------|--------|------|-----------|-----------|----------|
+| **금액** | **Money** | 통화가 포함된 금액 표현 | amount, currency | amount ≥ 0, 유효한 통화 | 금액 계산과 통화 처리 |
+| **기간** | **DateRange** | 시작일과 종료일로 구성된 기간 | startDate, endDate | start ≤ end, null 불허 | 기간 표현과 겹침 검사 |
+| **시간대** | **TimeSlot** | 예약 가능한 시작시간과 종료시간 | startTime, endTime | start < end, 동일 날짜 | 예약 시간대 표현 |
+| **정원** | **Capacity** | 현재 인원수와 최대 수용 인원 | current, maximum | 0 ≤ current ≤ max | 정원 관리 |
+| **연락처** | **ContactInfo** | 이메일과 전화번호 정보 | email, phone | 유효한 형식 | 연락처 정보 |
+| **주소** | **Address** | 물리적 위치 정보 | street, city, zipCode | 빈 값 불허 | 위치 정보 |
 
 ## 4. 비즈니스 규칙 (불변식)
 
