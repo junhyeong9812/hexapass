@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="DateRange 객체 생성 테스트" tests="11" skipped="0" failures="0" errors="0" timestamp="2025-08-24T00:23:35" hostname="JUN" time="0.159">
+  <properties/>
+  <testcase name="지정된 날짜부터 일정 기간의 범위를 생성할 수 있다" classname="com.hexapass.domain.common.DateRangeTest$CreationTest" time="0.059"/>
+  <testcase name="[1] null, 2025-08-24" classname="com.hexapass.domain.common.DateRangeTest$CreationTest" time="0.023"/>
+  <testcase name="[2] 2025-08-24, null" classname="com.hexapass.domain.common.DateRangeTest$CreationTest" time="0.001"/>
+  <testcase name="[3] null, null" classname="com.hexapass.domain.common.DateRangeTest$CreationTest" time="0.002"/>
+  <testcase name="[1] 0" classname="com.hexapass.domain.common.DateRangeTest$CreationTest" time="0.012"/>
+  <testcase name="[2] -1" classname="com.hexapass.domain.common.DateRangeTest$CreationTest" time="0.002"/>
+  <testcase name="[3] -10" classname="com.hexapass.domain.common.DateRangeTest$CreationTest" time="0.001"/>
+  <testcase name="오늘부터 지정된 일수만큼의 범위를 생성할 수 있다" classname="com.hexapass.domain.common.DateRangeTest$CreationTest" time="0.001"/>
+  <testcase name="시작일과 종료일이 같은 단일 날짜 범위를 생성할 수 있다" classname="com.hexapass.domain.common.DateRangeTest$CreationTest" time="0.002"/>
+  <testcase name="유효한 시작일과 종료일로 DateRange를 생성할 수 있다" classname="com.hexapass.domain.common.DateRangeTest$CreationTest" time="0.001"/>
+  <testcase name="시작일이 종료일보다 늦으면 예외가 발생한다" classname="com.hexapass.domain.common.DateRangeTest$CreationTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
