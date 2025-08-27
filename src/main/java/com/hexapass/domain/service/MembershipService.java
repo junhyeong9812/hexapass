@@ -72,12 +72,58 @@ public class MembershipService {
         }
 
         // 갱신 요금 계산 (할인 적용)
-        DiscountContext discountContext = DiscountContext.builder()
-                .member(member)
-                .plan(plan)
-                .baseDate(LocalDate.now())
-                .build();
+        DiscountContext discountContext = DiscountContext.complete(
+                member,
+                plan,
+                LocalDate.now(),
+                null, // 쿠폰 코드가 있다면 매개변수로 받아서 전달
+                null  // 리소스 타입이 있다면 매개변수로 받아서 전달
+        );
 
+        Money renewalPrice = discountPolicy.applyDiscount(plan.getPrice(), discountContext);
+
+        try {
+            // 멤버십 기간 연장
+            DateRange currentPeriod = member.getMembershipPeriod();
+            DateRange newPeriod;
+
+            if (currentPeriod != null && !member.isMembershipExpired()) {
+                // 현재 멤버십이 유효한 경우 연장
+                LocalDate extendFrom = currentPeriod.getEndDate().plusDays(1);
+                newPeriod = DateRange.of(extendFrom, extendFrom.plusDays(plan.getDurationDays() - 1));
+            } else {
+                // 만료된 경우 새로 시작
+                LocalDate today = LocalDate.now();
+                newPeriod = DateRange.of(today, today.plusDays(plan.getDurationDays() - 1));
+            }
+
+            member.assignMembership(plan, newPeriod);
+
+            return MembershipRenewalResult.success(member, renewalPrice);
+        } catch (Exception e) {
+            return MembershipRenewalResult.failed("멤버십 갱신 중 오류 발생: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 멤버십 갱신 (쿠폰 포함)
+     */
+    public MembershipRenewalResult renewMembership(
+            Member member,
+            MembershipPlan plan,
+            DiscountPolicy discountPolicy,
+            String couponCode) {
+
+        if (member.getStatus() != com.hexapass.domain.type.MemberStatus.ACTIVE) {
+            return MembershipRenewalResult.failed("활성 상태의 회원만 멤버십을 갱신할 수 있습니다");
+        }
+
+        if (!plan.isActive()) {
+            return MembershipRenewalResult.failed("비활성화된 플랜으로는 갱신할 수 없습니다");
+        }
+
+        // 갱신 요금 계산 (할인 적용)
+        DiscountContext discountContext = DiscountContext.withCoupon(member, plan, couponCode);
         Money renewalPrice = discountPolicy.applyDiscount(plan.getPrice(), discountContext);
 
         try {
@@ -179,14 +225,13 @@ public class MembershipService {
         return renewMembership(member, currentPlan, discountPolicy);
     }
 
+    // =========================
+    // Private Helper Methods
+    // =========================
+
     private Money calculatePlanDifference(MembershipPlan current, MembershipPlan newPlan,
                                           Member member, DiscountPolicy discountPolicy) {
-        DiscountContext context = DiscountContext.builder()
-                .member(member)
-                .plan(newPlan)
-                .baseDate(LocalDate.now())
-                .build();
-
+        DiscountContext context = DiscountContext.of(member, newPlan);
         Money newPlanPrice = discountPolicy.applyDiscount(newPlan.getPrice(), context);
 
         if (current == null) {
@@ -212,6 +257,10 @@ public class MembershipService {
             return currentPeriod;
         }
     }
+
+    // =========================
+    // Result Classes
+    // =========================
 
     /**
      * 플랜 변경 결과
